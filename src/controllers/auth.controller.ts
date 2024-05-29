@@ -9,6 +9,7 @@ import {
 import { UserDocument } from "../models/user.model";
 import { Document } from "mongoose";
 import { AppError } from "../utils/customError";
+import { sign } from "../utils/jwt";
 
 export async function loginUserHandler(
   req: Request<{}, {}, LoginType["body"]>,
@@ -23,7 +24,19 @@ export async function loginUserHandler(
     if (!isMatch) {
       throw new AppError("Password is incorrect");
     }
-    res.sendStatus(200);
+
+    const token = sign(
+      { userId: user._id },
+      {
+        expiresIn: "1d",
+      }
+    );
+    res.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 86400000,
+    });
+    res.status(200).json({ userId: user._id });
   } catch (e) {
     log.error(e);
     next(e);
