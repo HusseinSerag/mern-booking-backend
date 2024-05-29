@@ -4,6 +4,7 @@ import { createUser, findUser, ifUserExist } from "../services/user.service";
 import { log } from "../utils/logger";
 import { omit } from "lodash";
 import { sign } from "../utils/jwt";
+
 export async function registerUserHandler(
   req: Request<{}, {}, UserType["body"]>,
   res: Response,
@@ -11,7 +12,7 @@ export async function registerUserHandler(
 ) {
   const { email, firstName, lastName, password } = req.body;
   try {
-    await findUser(email, ifUserExist);
+    await findUser<null>(email, ifUserExist);
 
     const user = await createUser(email, firstName, password, lastName);
     const token = sign(

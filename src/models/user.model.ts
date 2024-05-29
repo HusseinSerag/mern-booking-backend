@@ -8,6 +8,7 @@ export interface UserDocument {
   lastName: string;
   createdAt: Date;
   updatedAt: Date;
+  comparePasswords(pass: string): Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>(
@@ -32,6 +33,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
   },
   {
     timestamps: true,
+    methods: {
+      comparePasswords(incomingPassword: string) {
+        return bcrypt.compare(incomingPassword, this.password);
+      },
+    },
   }
 );
 

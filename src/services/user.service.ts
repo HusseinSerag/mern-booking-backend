@@ -1,16 +1,26 @@
 import { Document } from "mongoose";
 import { User, UserDocument } from "../models/user.model";
 import { AppError } from "../utils/customError";
-
-export async function findUser(email: string, fn: (...args: any[]) => any) {
+export type UserDoc = Document<unknown, {}, UserDocument> & UserDocument;
+export async function findUser<T>(
+  email: string,
+  fn: (...args: any[]) => Promise<T>
+) {
   const user = await User.findOne({ email });
   return fn(user);
 }
 
-export function ifUserExist(user: Document<unknown, {}, UserDocument> | null) {
+export function ifUserExist(user: UserDoc | null) {
   if (user) {
     throw new AppError("User already exists!");
   }
+  return Promise.resolve(null);
+}
+export async function ifUserDoesNotExist(user: UserDoc | null) {
+  if (!user) {
+    throw new AppError("User doesn't exist!");
+  }
+  return user;
 }
 export async function createUser(
   email: string,
