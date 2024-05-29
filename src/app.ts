@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { log } from "./utils/logger";
 import { connect } from "./utils/connect";
+import { routes } from "./routes";
 dotenv.config({ path: path.resolve(__dirname, "../config.env") });
 
 const app = express();
@@ -18,4 +19,5 @@ app.get("/api/test", async (req, res) => {
 app.listen(8000, async () => {
   log.info("Server started at port 8000");
   await connect();
+  routes(app);
 });
