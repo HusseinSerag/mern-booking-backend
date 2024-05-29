@@ -9,6 +9,7 @@ export function ErrorHandler(
   if (err instanceof AppError) {
     return res.status(400).json({
       message: err.message,
+      error: err.error,
     });
   } else {
     return res.status(500).json({
