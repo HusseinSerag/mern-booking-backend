@@ -1,6 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
 import { UserType } from "../schema/user.schema";
-import { createUser, findIfUserExist } from "../services/user.service";
+import { createUser, findUser, ifUserExist } from "../services/user.service";
 import { log } from "../utils/logger";
 import { omit } from "lodash";
 import { sign } from "../utils/jwt";
@@ -11,7 +11,8 @@ export async function registerUserHandler(
 ) {
   const { email, firstName, lastName, password } = req.body;
   try {
-    await findIfUserExist(email);
+    await findUser(email, ifUserExist);
+
     const user = await createUser(email, firstName, password, lastName);
     const token = sign(
       { userId: user._id },
