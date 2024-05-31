@@ -1,7 +1,11 @@
 import { Document } from "mongoose";
 import { User, UserDocument } from "../models/user.model";
 import { AppError } from "../utils/customError";
-export type UserDoc = Document<unknown, {}, UserDocument> & UserDocument;
+export type UserDoc = Document<unknown, {}, UserDocument> &
+  UserDocument &
+  Required<{
+    _id: string;
+  }>;
 export async function findUser<T>(
   email: string,
   fn: (...args: any[]) => Promise<T>

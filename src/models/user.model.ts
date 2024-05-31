@@ -8,6 +8,9 @@ export interface UserDocument {
   lastName: string;
   createdAt: Date;
   updatedAt: Date;
+  isEmailConfirmed: boolean;
+  emailConfirmationToken: string;
+  emailConfirmationExpireTime: Date | null;
   comparePasswords(pass: string): Promise<boolean>;
 }
 
@@ -30,6 +33,12 @@ const userSchema = new mongoose.Schema<UserDocument>(
       type: String,
       required: true,
     },
+    isEmailConfirmed: {
+      type: Boolean,
+      default: false,
+    },
+    emailConfirmationToken: String,
+    emailConfirmationExpireTime: Date,
   },
   {
     timestamps: true,
