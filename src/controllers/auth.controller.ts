@@ -11,6 +11,7 @@ import { Document } from "mongoose";
 import { AppError } from "../utils/customError";
 import { sign } from "../utils/jwt";
 import { RequestI } from "../types";
+import { omit } from "lodash";
 
 export async function loginUserHandler(
   req: Request<{}, {}, LoginType["body"]>,
@@ -44,6 +45,15 @@ export async function loginUserHandler(
   }
 }
 
+export async function getCurrentUserHandler(
+  req: RequestI,
+  res: Response,
+  next: NextFunction
+) {
+  res.status(200).json({
+    user: omit(req.user!.toObject(), ["password"]),
+  });
+}
 export async function requestConfirmEmailHandler(
   req: RequestI,
   res: Response,

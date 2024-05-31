@@ -3,16 +3,22 @@ import { type RequestI } from "../types";
 import { log } from "../utils/logger";
 import { AppError } from "../utils/customError";
 import { verify } from "../utils/jwt";
-export function verifyToken(req: RequestI, res: Response, next: NextFunction) {
+import { findUserById } from "../services/user.service";
+export async function verifyToken(
+  req: RequestI,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const token = req.cookies["auth_token"];
 
     if (!token) {
       throw new AppError("Unauthorized , please log in!");
     }
-    const decodedURL = verify(token);
-    log.info(decodedURL);
+    const { iat, userId } = verify(token);
+    const user = await findUserById(userId);
 
+    req.user = user;
     next();
   } catch (e) {
     next(e);

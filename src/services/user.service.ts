@@ -48,6 +48,9 @@ export async function createUser(
 export async function findUserById(id: string) {
   try {
     const user = await User.findById(id);
+    if (!user) {
+      throw new AppError("User doesn't exist!");
+    }
     return user;
   } catch (e) {
     throw e;
