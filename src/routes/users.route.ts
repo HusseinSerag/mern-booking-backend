@@ -7,6 +7,7 @@ import { loginSchema } from "../schema/auth.schema";
 import {
   getCurrentUserHandler,
   loginUserHandler,
+  logoutHandler,
 } from "../controllers/auth.controller";
 import { verifyToken } from "../middleware/verifyToken";
 
@@ -14,6 +15,7 @@ const router = Router();
 
 router.post("/register", validate(userZodSchema), registerUserHandler);
 router.post("/login", validate(loginSchema), loginUserHandler);
-router.get("/", verifyToken, getCurrentUserHandler);
+router.post("/logout", verifyToken, logoutHandler);
+router.get("/user", verifyToken, getCurrentUserHandler);
 
 export default router;

@@ -62,3 +62,18 @@ export async function requestConfirmEmailHandler(
   const user = req.user!;
   const email = user.email;
 }
+
+export async function logoutHandler(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  res.cookie("auth_token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  res.status(200).json({
+    message: "User logged out successfully!",
+  });
+}
