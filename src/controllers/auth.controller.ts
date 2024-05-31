@@ -10,6 +10,7 @@ import { UserDocument } from "../models/user.model";
 import { Document } from "mongoose";
 import { AppError } from "../utils/customError";
 import { sign } from "../utils/jwt";
+import { RequestI } from "../types";
 
 export async function loginUserHandler(
   req: Request<{}, {}, LoginType["body"]>,
@@ -41,4 +42,13 @@ export async function loginUserHandler(
     log.error(e);
     next(e);
   }
+}
+
+export async function requestConfirmEmailHandler(
+  req: RequestI,
+  res: Response,
+  next: NextFunction
+) {
+  const user = req.user!;
+  const email = user.email;
 }

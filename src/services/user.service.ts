@@ -44,3 +44,12 @@ export async function createUser(
     throw e;
   }
 }
+
+export async function findUserById(id: string) {
+  try {
+    const user = await User.findById(id);
+    return user;
+  } catch (e) {
+    throw e;
+  }
+}
