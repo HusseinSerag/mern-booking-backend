@@ -24,10 +24,23 @@ export async function loginUserHandler(
   const { email, password } = req.body;
   try {
     const user = await findUser<UserDoc>(email, ifUserDoesNotExist);
-
+    if (user.loginLocked && new Date(user.loginLocked).getTime() > Date.now()) {
+      user.numberOfLogins = 0;
+      await user.save();
+      throw new AppError("Please login later!");
+    }
     const isMatch = await user.comparePasswords(password);
     if (!isMatch) {
-      throw new AppError("Password is incorrect");
+      user.numberOfLogins = user.numberOfLogins + 1;
+      await user.save();
+      if (user.numberOfLogins >= 5) {
+        user.loginLocked = new Date(Date.now() + 30 * 60 * 1000);
+        await user.save();
+        throw new AppError(
+          "You tried logging in too much , please try again later!"
+        );
+      }
+      throw new AppError("Password is incorrect!");
     }
 
     const token = sign(
@@ -36,6 +49,9 @@ export async function loginUserHandler(
         expiresIn: "1d",
       }
     );
+    user.numberOfLogins = 0;
+    user.loginLocked = null;
+    await user.save();
     res.cookie("auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

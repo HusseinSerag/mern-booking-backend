@@ -19,6 +19,8 @@ export interface UserDocument {
   comparePasswords(pass: string): Promise<boolean>;
   createRequestEmailConfirmationToken(): string;
   checkIfTokenIsNew(time: number): boolean;
+  loginLocked: Date | null;
+  numberOfLogins: number;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>(
@@ -47,6 +49,11 @@ const userSchema = new mongoose.Schema<UserDocument>(
     emailConfirmationToken: String,
     emailConfirmationExpireTime: Date,
     emailConfirmedAt: Date,
+    numberOfLogins: {
+      type: Number,
+      default: 0,
+    },
+    loginLocked: Date,
   },
   {
     timestamps: true,
