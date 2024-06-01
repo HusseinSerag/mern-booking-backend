@@ -15,8 +15,10 @@ export interface UserDocument {
   isEmailConfirmed: boolean;
   emailConfirmationToken: string;
   emailConfirmationExpireTime: Date | null;
+  emailConfirmedAt: Date | null;
   comparePasswords(pass: string): Promise<boolean>;
   createRequestEmailConfirmationToken(): string;
+  checkIfTokenIsNew(time: number): boolean;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>(
@@ -44,12 +46,25 @@ const userSchema = new mongoose.Schema<UserDocument>(
     },
     emailConfirmationToken: String,
     emailConfirmationExpireTime: Date,
+    emailConfirmedAt: Date,
   },
   {
     timestamps: true,
     methods: {
       comparePasswords(incomingPassword: string) {
         return bcrypt.compare(incomingPassword, this.password);
+      },
+      checkIfTokenIsNew(time: number) {
+        if (this.emailConfirmedAt) {
+          const changedTime = parseInt(
+            (this.emailConfirmedAt.getTime() / 1000).toString(),
+            10
+          );
+
+          return time < changedTime;
+        }
+
+        return false;
       },
       createRequestEmailConfirmationToken() {
         try {

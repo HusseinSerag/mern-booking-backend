@@ -17,7 +17,9 @@ export async function verifyToken(
     }
     const { iat, userId } = verify(token);
     const user = await findUserById(userId);
-
+    if (user.checkIfTokenIsNew(iat!)) {
+      throw new AppError("Please log in again!");
+    }
     req.user = user;
     next();
   } catch (e) {

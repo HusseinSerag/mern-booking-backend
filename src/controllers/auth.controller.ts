@@ -111,6 +111,7 @@ export async function confirmEmailHandler(
     user.emailConfirmationToken = "";
     user.emailConfirmationExpireTime = null;
     user.isEmailConfirmed = true;
+    user.emailConfirmedAt = new Date(Date.now());
 
     await user.save();
     const authToken = sign(
