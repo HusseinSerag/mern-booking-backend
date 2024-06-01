@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { AppError } from "../utils/customError";
+import encrypt from "../utils/encrypt";
+
 export interface UserDocument {
   _id: string;
   email: string;
@@ -12,6 +16,7 @@ export interface UserDocument {
   emailConfirmationToken: string;
   emailConfirmationExpireTime: Date | null;
   comparePasswords(pass: string): Promise<boolean>;
+  createRequestEmailConfirmationToken(): string;
 }
 
 const userSchema = new mongoose.Schema<UserDocument>(
@@ -45,6 +50,30 @@ const userSchema = new mongoose.Schema<UserDocument>(
     methods: {
       comparePasswords(incomingPassword: string) {
         return bcrypt.compare(incomingPassword, this.password);
+      },
+      createRequestEmailConfirmationToken() {
+        try {
+          if (this.isEmailConfirmed) {
+            throw new AppError("Email is already confirmed!");
+          }
+          if (
+            this.emailConfirmationExpireTime &&
+            this.emailConfirmationExpireTime.getTime() > Date.now()
+          ) {
+            throw new AppError("Cannot issue another token!");
+          }
+
+          const token = crypto.randomBytes(32).toString("hex");
+
+          this.emailConfirmationToken = encrypt(token);
+          this.emailConfirmationExpireTime = new Date(
+            Date.now() + 5 * 60 * 1000
+          );
+
+          return token;
+        } catch (e) {
+          throw e;
+        }
       },
     },
   }

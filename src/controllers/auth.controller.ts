@@ -61,6 +61,19 @@ export async function requestConfirmEmailHandler(
 ) {
   const user = req.user!;
   const email = user.email;
+
+  try {
+    const token = user.createRequestEmailConfirmationToken();
+
+    res.status(200).json({
+      message: "successful",
+      token,
+    });
+
+    await user.save();
+  } catch (e) {
+    next(e);
+  }
 }
 
 export async function logoutHandler(
