@@ -12,6 +12,7 @@ import { AppError } from "../utils/customError";
 import { sign } from "../utils/jwt";
 import { RequestI } from "../types";
 import { omit } from "lodash";
+import { sendEmail } from "../utils/email";
 
 export async function loginUserHandler(
   req: Request<{}, {}, LoginType["body"]>,
@@ -70,6 +71,11 @@ export async function requestConfirmEmailHandler(
       token,
     });
 
+    await sendEmail({
+      subject: "Confirm Email",
+      email: email,
+      html: `Hello ${user.firstName}! Please confirm your mail by clicking on this <a href="${process.env.FRONTEND_URL}/verify/${token}" target="_blank"> link </a>`,
+    });
     await user.save();
   } catch (e) {
     next(e);
