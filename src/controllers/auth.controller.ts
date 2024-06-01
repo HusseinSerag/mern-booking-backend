@@ -1,8 +1,9 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { LoginType } from "../schema/auth.schema";
+import { ConfirmMailType, LoginType } from "../schema/auth.schema";
 import { log } from "../utils/logger";
 import {
   findUser,
+  findUserByConfirmEmailToken,
   ifUserDoesNotExist,
   UserDoc,
 } from "../services/user.service";
@@ -13,6 +14,7 @@ import { sign } from "../utils/jwt";
 import { RequestI } from "../types";
 import { omit } from "lodash";
 import { sendEmail } from "../utils/email";
+import encrypt from "../utils/encrypt";
 
 export async function loginUserHandler(
   req: Request<{}, {}, LoginType["body"]>,
@@ -95,4 +97,35 @@ export async function logoutHandler(
   res.status(200).json({
     message: "User logged out successfully!",
   });
+}
+
+export async function confirmEmailHandler(
+  req: Request<ConfirmMailType["params"]>,
+  res: Response,
+  next: NextFunction
+) {
+  const { token } = req.params;
+  try {
+    const user = await findUserByConfirmEmailToken(encrypt(token));
+
+    user.emailConfirmationToken = "";
+    user.emailConfirmationExpireTime = null;
+    user.isEmailConfirmed = true;
+
+    await user.save();
+    const authToken = sign(
+      { userId: user._id },
+      {
+        expiresIn: "1d",
+      }
+    );
+    res.cookie("auth_token", authToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 86400000,
+    });
+    res.status(200).json({ message: "success" });
+  } catch (e) {
+    next(e);
+  }
 }

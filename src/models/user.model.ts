@@ -66,9 +66,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
           const token = crypto.randomBytes(32).toString("hex");
 
           this.emailConfirmationToken = encrypt(token);
-          this.emailConfirmationExpireTime = new Date(
-            Date.now() + 5 * 60 * 1000
-          );
+          this.emailConfirmationExpireTime = new Date(Date.now() + 3600000);
 
           return token;
         } catch (e) {

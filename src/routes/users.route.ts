@@ -4,6 +4,7 @@ import { validate } from "../middleware/validateResource";
 import { userZodSchema } from "../schema/user.schema";
 import jwt from "jsonwebtoken";
 import {
+  confirmEmailHandler,
   getCurrentUserHandler,
   loginUserHandler,
   logoutHandler,
@@ -18,5 +19,6 @@ router.post("/logout", logoutHandler);
 router.post("/login", validate(loginSchema), loginUserHandler);
 router.get("/user", verifyToken, getCurrentUserHandler);
 router.post("/request-confirm-email", verifyToken, requestConfirmEmailHandler);
+router.patch("/confirm-email/:token", confirmEmailHandler);
 
 export default router;

@@ -15,3 +15,11 @@ export const loginSchema = z.object({
 });
 
 export type LoginType = z.infer<typeof loginSchema>;
+
+export const confirmMailSchema = z.object({
+  params: z.object({
+    token: z.string({ required_error: "A token is required" }),
+  }),
+});
+
+export type ConfirmMailType = z.infer<typeof confirmMailSchema>;

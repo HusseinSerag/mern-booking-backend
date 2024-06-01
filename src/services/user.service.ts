@@ -56,3 +56,22 @@ export async function findUserById(id: string) {
     throw e;
   }
 }
+
+export async function findUserByConfirmEmailToken(
+  emailConfirmationToken: string
+) {
+  try {
+    const user = await User.findOne({
+      emailConfirmationToken,
+      emailConfirmationExpireTime: {
+        $gt: Date.now(),
+      },
+    });
+    if (!user) {
+      throw new AppError("Token is invalid or expired!");
+    }
+    return user;
+  } catch (e) {
+    throw e;
+  }
+}
