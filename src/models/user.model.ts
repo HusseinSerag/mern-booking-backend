@@ -10,6 +10,7 @@ export interface UserDocument {
   password: string;
   firstName: string;
   lastName: string;
+  profilePicture: string;
   createdAt: Date;
   updatedAt: Date;
   isEmailConfirmed: boolean;
@@ -45,6 +46,9 @@ const userSchema = new mongoose.Schema<UserDocument>(
     isEmailConfirmed: {
       type: Boolean,
       default: false,
+    },
+    profilePicture: {
+      type: String,
     },
     emailConfirmationToken: String,
     emailConfirmationExpireTime: Date,

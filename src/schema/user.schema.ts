@@ -10,6 +10,7 @@ export const userZodSchema = z.object({
       .min(6, "Password should be atleast 6 characters!"),
     firstName: z.string({ required_error: "First name is required" }),
     lastName: z.string({ required_error: "Last name is required" }),
+    profilePicture: z.string().optional(),
   }),
 });
 

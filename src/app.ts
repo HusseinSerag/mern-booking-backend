@@ -6,11 +6,23 @@ import { log } from "./utils/logger";
 import { connect } from "./utils/connect";
 import { routes } from "./routes";
 import cookieParser from "cookie-parser";
-dotenv.config({ path: path.resolve(__dirname, "../config.env") });
+import helmet from "helmet";
+import ExpressMongoSanitize from "express-mongo-sanitize";
+if (process.env.NODE_ENV === "testing") {
+  dotenv.config({ path: path.resolve(__dirname, "../e2e.env") });
+} else {
+  dotenv.config({ path: path.resolve(__dirname, "../config.env") });
+}
 
 const app = express();
-app.use(express.json());
+app.use(helmet());
+app.use(
+  express.json({
+    limit: "10kb",
+  })
+);
 app.use(express.urlencoded({ extended: true }));
+app.use(ExpressMongoSanitize());
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,

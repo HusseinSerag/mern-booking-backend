@@ -7,7 +7,7 @@ export function connect() {
   return mongoose
     .connect(dbUri)
     .then(() => {
-      log.info("Database connected successfully");
+      log.info("Database connected successfully ");
     })
     .catch((e) => {
       log.fatal(e);
