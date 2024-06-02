@@ -11,7 +11,7 @@ export async function verifyToken(
 ) {
   try {
     const token = req.cookies["auth_token"];
-
+    log.info(token);
     if (!token) {
       throw new AppError("Unauthorized , please log in!");
     }
