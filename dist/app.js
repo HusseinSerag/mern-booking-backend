@@ -28,6 +28,7 @@ if (process.env.NODE_ENV === "testing") {
 else {
     dotenv_1.default.config({ path: path_1.default.resolve(__dirname, "../config.env") });
 }
+logger_1.log.info(process.env.FRONTEND_URL);
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
 app.use(express_1.default.json({
