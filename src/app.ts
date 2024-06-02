@@ -14,6 +14,7 @@ if (process.env.NODE_ENV === "testing") {
   dotenv.config({ path: path.resolve(__dirname, "../config.env") });
 }
 
+log.info(process.env.FRONTEND_URL);
 const app = express();
 app.use(helmet());
 app.use(
