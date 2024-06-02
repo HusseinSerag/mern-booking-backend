@@ -24,6 +24,8 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/nodemailer": "^6.4.15",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
@@ -33,11 +35,14 @@
   "scripts": {
     "test": "NODE_ENV=testing nodemon",
     "start": "nodemon",
-    "build": "npm install && npx tsc",
+    "build": "rimraf dist && tsc",
     "start:prod": "node ./dist/app.js"
   },
   "keywords": [],
   "author": "Hussein Serag <husseinserag2014@gmail.com>",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "pre-commit": [
+    "build"
+  ]
 }
