@@ -1,7 +1,8 @@
 import pino from "pino";
-
-export const log = pino({
-  transport: {
-    target: "pino-pretty",
-  },
+import pretty from "pino-pretty";
+const stream = pretty({
+  levelFirst: true,
+  colorize: true,
+  ignore: "pid",
 });
+export const log = pino(stream);
