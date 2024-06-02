@@ -47,6 +47,7 @@ function loginUserHandler(req, res, next) {
             user.numberOfLogins = 0;
             user.loginLocked = null;
             yield user.save();
+            logger_1.log.info(process.env.NODE_ENV === "production");
             res.cookie("auth_token", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",

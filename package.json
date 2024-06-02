@@ -41,8 +41,5 @@
   "keywords": [],
   "author": "Hussein Serag <husseinserag2014@gmail.com>",
   "license": "ISC",
-  "description": "",
-  "pre-commit": [
-    "build"
-  ]
+  "description": ""
 }
