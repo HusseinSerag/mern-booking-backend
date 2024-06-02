@@ -34,9 +34,9 @@
   "main": "./src/app.ts",
   "scripts": {
     "test": "NODE_ENV=testing nodemon",
-    "start": "nodemon",
-    "build": "rimraf dist && tsc",
-    "start:prod": "node ./dist/app.js"
+    "start:prod": "nodemon",
+    "build": "tsc",
+    "start": "node ./dist/app.js"
   },
   "keywords": [],
   "author": "Hussein Serag <husseinserag2014@gmail.com>",
