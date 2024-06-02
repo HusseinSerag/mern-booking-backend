@@ -52,6 +52,7 @@ export async function loginUserHandler(
     user.numberOfLogins = 0;
     user.loginLocked = null;
     await user.save();
+    log.info(process.env.NODE_ENV === "production");
     res.cookie("auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
