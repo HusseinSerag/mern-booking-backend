@@ -32,7 +32,9 @@
   "main": "./src/app.ts",
   "scripts": {
     "test": "NODE_ENV=testing nodemon",
-    "start": "nodemon"
+    "start": "nodemon",
+    "build": "npm install && npx tsc",
+    "start:prod": "node ./dist/app.js"
   },
   "keywords": [],
   "author": "Hussein Serag <husseinserag2014@gmail.com>",
