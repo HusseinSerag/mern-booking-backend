@@ -34,7 +34,8 @@
     "test": "NODE_ENV=testing nodemon",
     "start:prod": "nodemon",
     "build": "tsc",
-    "start": "node ./dist/app.js"
+    "start": "node ./dist/app.js",
+    "vercel-build": "echo hello"
   },
   "keywords": [],
   "author": "Hussein Serag <husseinserag2014@gmail.com>",

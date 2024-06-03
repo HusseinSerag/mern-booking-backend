@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === "testing") {
 }
 
 log.info(process.env.FRONTEND_URL);
-const app = express();
+export const app = express();
 app.use(helmet());
 app.use(
   express.json({
@@ -36,8 +36,9 @@ app.get("/api/test", async (req, res) => {
   res.sendStatus(200);
 });
 
-app.listen(8000, async () => {
-  log.info("Server started at port 8000");
+app.listen(async () => {
+  log.info("Server started at port 3000");
+
   await connect();
   routes(app);
 });
