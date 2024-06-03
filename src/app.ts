@@ -37,7 +37,7 @@ app.get("/api/test", async (req, res) => {
   res.sendStatus(200);
 });
 
-app.listen(8000, async () => {
+app.listen(Number(process.env.PORT) || 3000, "0,0,0,0", async () => {
   log.info("Server started at port 8000");
   log.info(process.env.FRONTEND_URL);
   await connect();
